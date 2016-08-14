@@ -1,4 +1,35 @@
 <resources>
     <string name="app_name">TicTacToe</string>
     <string name="action_settings">Settings</string>
+    <string name="first_human">Te lépsz először.</string>
+    <string name="turn_human">A te köröd.</string>
+    <string name="turn_computer">Az Android köre.</string>
+    <string name="result_tie">Ez egy döntetlen!</string>
+    <string name="result_human_wins">Nyertél!</string>
+    <string name="result_computer_wins">Az Android nyert!</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="four">4</string>
+    <string name="five">5</string>
+    <string name="six">6</string>
+    <string name="seven">7</string>
+    <string name="eight">8</string>
+    <string name="nine">9</string>
+    <string name="info">Információ</string>
+    <string name="human">Játékos: </string>
+    <string name="android">Android: </string>
+    <string name="ties">Döntetlen: </string>
+    <string name="contact_heading">Kapcsolat információ</string>
+    <string name="contact_info">
+        <b>név:</b> Naszi75
+        <b>e-mail:</b> naszi75@gmail.com
+        <b>mobil:</b> +36302344866
+    </string>
+    <string name="about_heading">Játék információ</string>
+    <string name="about_info">Ez az alkalmazás lehetővé teszi számodra, hogy játsz a Tic Tac Toe játékkal a számítógép ellen, vagy akár egy másik játékos ellen.
+        A játékokat felváltva kezdhetjük. Valamint követni lehet majd az eredményt.
+    </string>
+    <string name="newGame_label">Új játék</string>
+    <string name="exitGame_label">Kilépés</string>
 </resources>
