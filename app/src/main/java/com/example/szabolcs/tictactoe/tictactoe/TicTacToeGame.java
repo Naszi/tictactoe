@@ -10,8 +10,8 @@ public class TicTacToeGame {
     private char mBoard[];
     private final static int BOARD_SIZE = 9;
 
-    public final static char HUMAN_PLAYER = 'X';
-    public final static char ANDROID_PLAYER = 'O';
+    public final static char PLAYER_ONE = 'X';
+    public final static char PLAYER_TWO = 'O';
     public final static char EMPTY_SPACE = ' ';
 
     private Random mRandom;
@@ -43,12 +43,12 @@ public class TicTacToeGame {
         int move;
 
         for (int i = 0; i < getBoardSize(); i++) {
-            if (mBoard[i] != HUMAN_PLAYER && mBoard[i] != ANDROID_PLAYER) {
+            if (mBoard[i] != PLAYER_ONE && mBoard[i] != PLAYER_TWO) {
                 char curr = mBoard[i];
-                mBoard[i] = ANDROID_PLAYER;
+                mBoard[i] = PLAYER_TWO;
 
                 if (checkForWinner() == 3) {
-                    setMove(ANDROID_PLAYER, i);
+                    setMove(PLAYER_TWO, i);
                     return i;
                 } else {
                     mBoard[i] = curr;
@@ -56,11 +56,11 @@ public class TicTacToeGame {
             }
         }
         for (int i = 0; i < getBoardSize(); i++) {
-            if (mBoard[i] != HUMAN_PLAYER && mBoard[i] != ANDROID_PLAYER) {
+            if (mBoard[i] != PLAYER_ONE && mBoard[i] != PLAYER_TWO) {
                 char curr = mBoard[i];
-                mBoard[i] = HUMAN_PLAYER;
+                mBoard[i] = PLAYER_ONE;
                 if (checkForWinner() == 2) {
-                    setMove(ANDROID_PLAYER, i);
+                    setMove(PLAYER_TWO, i);
                     return i;
                 } else {
                     mBoard[i] = curr;
@@ -70,52 +70,52 @@ public class TicTacToeGame {
 
         do {
             move = mRandom.nextInt(getBoardSize());
-        } while (mBoard[move] == HUMAN_PLAYER || mBoard[move] == ANDROID_PLAYER);
+        } while (mBoard[move] == PLAYER_ONE || mBoard[move] == PLAYER_TWO);
 
-        setMove(ANDROID_PLAYER, move);
+        setMove(PLAYER_TWO, move);
         return move;
     }
 
     public int checkForWinner() {
         for (int i = 0; i <= 6; i++) {
-            if (mBoard[i] == HUMAN_PLAYER &&
-                    mBoard[i + 1] == HUMAN_PLAYER &&
-                    mBoard[i + 2] == HUMAN_PLAYER)
+            if (mBoard[i] == PLAYER_ONE &&
+                    mBoard[i + 1] == PLAYER_ONE &&
+                    mBoard[i + 2] == PLAYER_ONE)
                 return 2;
-            if (mBoard[i] == ANDROID_PLAYER &&
-                    mBoard[i + 1] == ANDROID_PLAYER &&
-                    mBoard[i + 2] == ANDROID_PLAYER)
+            if (mBoard[i] == PLAYER_TWO &&
+                    mBoard[i + 1] == PLAYER_TWO &&
+                    mBoard[i + 2] == PLAYER_TWO)
                 return 3;
         }
 
         for (int i = 0; i <= 2; i++) {
-            if (mBoard[i] == HUMAN_PLAYER &&
-                    mBoard[i + 3] == HUMAN_PLAYER &&
-                    mBoard[i + 6] == HUMAN_PLAYER)
+            if (mBoard[i] == PLAYER_ONE &&
+                    mBoard[i + 3] == PLAYER_ONE &&
+                    mBoard[i + 6] == PLAYER_ONE)
                 return 2;
-            if (mBoard[i] == ANDROID_PLAYER &&
-                    mBoard[i + 3] == ANDROID_PLAYER &&
-                    mBoard[i + 6] == ANDROID_PLAYER)
+            if (mBoard[i] == PLAYER_TWO &&
+                    mBoard[i + 3] == PLAYER_TWO &&
+                    mBoard[i + 6] == PLAYER_TWO)
                 return 3;
         }
 
-        if (mBoard[0] == HUMAN_PLAYER &&
-                mBoard[4] == HUMAN_PLAYER &&
-                mBoard[8] == HUMAN_PLAYER ||
-                mBoard[2] == HUMAN_PLAYER &&
-                        mBoard[4] == HUMAN_PLAYER &&
-                        mBoard[6] == HUMAN_PLAYER)
+        if (mBoard[0] == PLAYER_ONE &&
+                mBoard[4] == PLAYER_ONE &&
+                mBoard[8] == PLAYER_ONE ||
+                mBoard[2] == PLAYER_ONE &&
+                        mBoard[4] == PLAYER_ONE &&
+                        mBoard[6] == PLAYER_ONE)
             return 2;
-        if (mBoard[0] == ANDROID_PLAYER &&
-                mBoard[4] == ANDROID_PLAYER &&
-                mBoard[8] == ANDROID_PLAYER ||
-                mBoard[2] == ANDROID_PLAYER &&
-                        mBoard[4] == ANDROID_PLAYER &&
-                        mBoard[6] == ANDROID_PLAYER)
+        if (mBoard[0] == PLAYER_TWO &&
+                mBoard[4] == PLAYER_TWO &&
+                mBoard[8] == PLAYER_TWO ||
+                mBoard[2] == PLAYER_TWO &&
+                        mBoard[4] == PLAYER_TWO &&
+                        mBoard[6] == PLAYER_TWO)
             return 3;
 
         for (int i = 0; i < getBoardSize(); i++) {
-            if (mBoard[i] != HUMAN_PLAYER && mBoard[i] != ANDROID_PLAYER)
+            if (mBoard[i] != PLAYER_ONE && mBoard[i] != PLAYER_TWO)
                 return 0;
         }
         return 1;

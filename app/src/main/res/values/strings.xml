@@ -4,9 +4,13 @@
     <string name="first_human">Te lépsz először.</string>
     <string name="turn_human">A te köröd.</string>
     <string name="turn_computer">Az Android köre.</string>
+    <string name="turn_player_one">Az első játékos köre.</string>
+    <string name="turn_player_two">A második játékos köre.</string>
     <string name="result_tie">Ez egy döntetlen!</string>
     <string name="result_human_wins">Nyertél!</string>
     <string name="result_computer_wins">Az Android nyert!</string>
+    <string name="result_player_one_wins">Az első játékos nyert.</string>
+    <string name="result_player_two_wins">A második játékos nyert.</string>
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="three">3</string>
@@ -20,6 +24,8 @@
     <string name="human">Játékos: </string>
     <string name="android">Android: </string>
     <string name="ties">Döntetlen: </string>
+    <string name="player_one">1. játékos: </string>
+    <string name="player_two">2. játékos: </string>
     <string name="contact_heading">Kapcsolat információ</string>
     <string name="contact_info">
         <b>név:</b> Naszi75
@@ -32,4 +38,5 @@
     </string>
     <string name="newGame_label">Új játék</string>
     <string name="exitGame_label">Kilépés</string>
+    <string name="main_menu">Fő Menű</string>
 </resources>

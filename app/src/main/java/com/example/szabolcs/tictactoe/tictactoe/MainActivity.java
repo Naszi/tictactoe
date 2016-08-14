@@ -1,37 +1,52 @@
 package com.example.szabolcs.tictactoe.tictactoe;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
 
+public class TicTacToeTutorialActivity extends Activity {
+
+    // Represents the internal state of the game
     private TicTacToeGame mGame;
 
+    // Buttons making up the board
     private Button mBoardButtons[];
 
+    // Various text displayed
     private TextView mInfoTextView;
-    private TextView mHumanCount;
+    private TextView mPlayerOneCount;
     private TextView mTieCount;
-    private TextView mAndroidCount;
+    private TextView mPlayerTwoCount;
+    private TextView mPlayerOneText;
+    private TextView mPlayerTwoText;
 
-    private int mHumanCounter = 0;
+    // Counters for the wins and ties
+    private int mPlayerOneCounter = 0;
     private int mTieCounter = 0;
-    private int mAndroidCounter = 0;
+    private int mPlayerTwoCounter = 0;
 
-    private boolean mHumanFirst = true;
+    // Bool to check if game is over
+    private boolean mPlayerOneFirst = true;
+    private boolean mIsSinglePlayer = false;
+    private boolean mIsPlayerOneTurn = true;
     private boolean mGameOver = false;
 
+    /** Called when the activity is first created. */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
+        // Initialize the buttons
         mBoardButtons = new Button[mGame.getBoardSize()];
         mBoardButtons[0] = (Button) findViewById(R.id.one);
         mBoardButtons[1] = (Button) findViewById(R.id.two);
@@ -43,77 +58,156 @@ public class MainActivity extends AppCompatActivity {
         mBoardButtons[7] = (Button) findViewById(R.id.eight);
         mBoardButtons[8] = (Button) findViewById(R.id.nine);
 
+        // setup the textviews
         mInfoTextView = (TextView) findViewById(R.id.information);
-        mHumanCount = (TextView) findViewById(R.id.humanCount);
+        mPlayerOneCount = (TextView) findViewById(R.id.humanCount);
         mTieCount = (TextView) findViewById(R.id.tiesCount);
-        mAndroidCount = (TextView) findViewById(R.id.androidCount);
+        mPlayerTwoCount = (TextView) findViewById(R.id.androidCount);
+        mPlayerOneText = (TextView) findViewById(R.id.human);
+        mPlayerTwoText = (TextView) findViewById(R.id.android);
 
-        mHumanCount.setText(Integer.toString(mHumanCounter));
+        // set the initial counter display values
+        mPlayerOneCount.setText(Integer.toString(mPlayerOneCounter));
         mTieCount.setText(Integer.toString(mTieCounter));
-        mAndroidCount.setText(Integer.toString(mAndroidCounter));
+        mPlayerTwoCount.setText(Integer.toString(mPlayerTwoCounter));
 
+        // create a new game object
         mGame = new TicTacToeGame();
+
+        // start a new game
         startNewGame();
+
     }
 
-    private void startNewGame() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.game_menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch(item.getItemId())
+        {
+            case R.id.newGame:
+                startNewGame();
+                break;
+            case R.id.exitGame:
+                TicTacToeTutorialActivity.this.finish();
+                break;
+        }
+
+        return true;
+    }
+
+    // start a new game
+    // clears the board and resets all buttons / text
+    // sets game over to be false
+    private void startNewGame(boolean isSingle)
+    {
+
+        this.mIsSinglePlayer = isSingle;
+
         mGame.clearBoard();
 
-        for (int i = 0; i < mBoardButtons.length; i++) {
+        for (int i = 0; i < mBoardButtons.length; i++)
+        {
             mBoardButtons[i].setText("");
             mBoardButtons[i].setEnabled(true);
             mBoardButtons[i].setOnClickListener(new ButtonClickListener(i));
+            mBoardButtons[i].setBackgroundDrawable(getResources().getDrawable(R.drawable.blank_images));
         }
 
-        if (mHumanFirst) {
-            mInfoTextView.setText(R.string.first_human);
-            mHumanFirst = false;
-        } else {
-            mInfoTextView.setText(R.string.turn_computer);
-            int move = mGame.getComputerMove();
-            setMove(mGame.ANDROID_PLAYER, move);
-            mHumanFirst = true;
+        if (mIsSinglePlayer)
+        {
+            mPlayerOneText.setText("Human:");
+            mPlayerTwoText.setText("Android:");
+
+            if (mPlayerOneFirst)
+            {
+                mInfoTextView.setText(R.string.first_human);
+                mPlayerOneFirst = false;
+            }
+            else
+            {
+                mInfoTextView.setText(R.string.turn_computer);
+                int move = mGame.getComputerMove();
+                setMove(mGame.PLAYER_TWO, move);
+                mPlayerOneFirst = true;
+            }
         }
+        else
+        {
+            mPlayerOneText.setText("Player One:");
+            mPlayerTwoText.setText("Player Two:");
+
+            if (mPlayerOneFirst)
+            {
+                mInfoTextView.setText(R.string.turn_player_one);
+                mPlayerOneFirst = false;
+            }
+            else
+            {
+                mInfoTextView.setText(R.string.turn_player_two);
+                mPlayerOneFirst = true;
+            }
+        }
+
+        mGameOver = false;
     }
 
-    private class ButtonClickListener implements View.OnClickListener {
+    private class ButtonClickListener implements View.OnClickListener
+    {
         int location;
 
-        public ButtonClickListener(int location) {
+        public ButtonClickListener(int location)
+        {
             this.location = location;
         }
 
-        @Override
-        public void onClick(View view) {
-            if (!mGameOver) {
-                if (mBoardButtons[location].isEnabled()) {
-                    setMove(mGame.HUMAN_PLAYER, location);
+        public void onClick(View view)
+        {
+            if (!mGameOver)
+            {
+                if (mBoardButtons[location].isEnabled())
+                {
+                    setMove(mGame.PLAYER_ONE, location);
 
                     int winner = mGame.checkForWinner();
 
-                    if (winner == 0) {
+                    if (winner == 0)
+                    {
                         mInfoTextView.setText(R.string.turn_computer);
                         int move = mGame.getComputerMove();
-                        setMove(mGame.ANDROID_PLAYER, move);
+                        setMove(mGame.PLAYER_TWO, move);
                         winner = mGame.checkForWinner();
                     }
 
-                    if (winner == 0) {
+                    if (winner == 0)
                         mInfoTextView.setText(R.string.turn_human);
-                    } else if (winner == 1) {
+                    else if (winner == 1)
+                    {
                         mInfoTextView.setText(R.string.result_tie);
                         mTieCounter++;
                         mTieCount.setText(Integer.toString(mTieCounter));
                         mGameOver = true;
-                    } else if (winner == 2) {
+                    }
+                    else if (winner == 2)
+                    {
                         mInfoTextView.setText(R.string.result_human_wins);
-                        mHumanCounter++;
-                        mHumanCount.setText(Integer.toString(mHumanCounter));
+                        mPlayerOneCounter++;
+                        mPlayerOneCount.setText(Integer.toString(mPlayerOneCounter));
                         mGameOver = true;
-                    } else {
+                    }
+                    else
+                    {
                         mInfoTextView.setText(R.string.result_computer_wins);
-                        mAndroidCounter++;
-                        mAndroidCount.setText(Integer.toString(mAndroidCounter));
+                        mPlayerTwoCounter++;
+                        mPlayerTwoCount.setText(Integer.toString(mPlayerTwoCounter));
                         mGameOver = true;
                     }
                 }
@@ -121,35 +215,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setMove(char player, int location) {
+    // set move for the current player
+    private void setMove(char player, int location)
+    {
         mGame.setMove(player, location);
         mBoardButtons[location].setEnabled(false);
-        mBoardButtons[location].setText(String.valueOf(player));
-        if (player == mGame.HUMAN_PLAYER)
-            mBoardButtons[location].setTextColor(Color.GREEN);
+        //mBoardButtons[location].setText(String.valueOf(player));
+        if (player == mGame.PLAYER_ONE)
+            mBoardButtons[location].setBackgroundDrawable(getResources().getDrawable(R.drawable.x_images));
+            //mBoardButtons[location].setTextColor(Color.GREEN);
         else
-            mBoardButtons[location].setTextColor(Color.RED);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+            mBoardButtons[location].setBackgroundDrawable(getResources().getDrawable(R.drawable.o_images));
+        //mBoardButtons[location].setTextColor(Color.RED);
     }
 }
