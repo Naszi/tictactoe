@@ -14,13 +14,10 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-    // Represents the internal state of the game
     private TicTacToeGame mGame;
 
-    // Buttons making up the board
     private Button mBoardButtons[];
 
-    // Various text displayed
     private TextView mInfoTextView;
     private TextView mPlayerOneCount;
     private TextView mTieCount;
@@ -28,25 +25,23 @@ public class MainActivity extends Activity {
     private TextView mPlayerOneText;
     private TextView mPlayerTwoText;
 
-    // Counters for the wins and ties
     private int mPlayerOneCounter = 0;
     private int mTieCounter = 0;
     private int mPlayerTwoCounter = 0;
 
-    // Bool to check if game is over
     private boolean mPlayerOneFirst = true;
     private boolean mIsSinglePlayer = false;
     private boolean mIsPlayerOneTurn = true;
     private boolean mGameOver = false;
 
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
-        // Initialize the buttons
+        boolean mGameType = getIntent().getExtras().getBoolean("gameType");
+
         mBoardButtons = new Button[mGame.getBoardSize()];
         mBoardButtons[0] = (Button) findViewById(R.id.one);
         mBoardButtons[1] = (Button) findViewById(R.id.two);
@@ -58,7 +53,6 @@ public class MainActivity extends Activity {
         mBoardButtons[7] = (Button) findViewById(R.id.eight);
         mBoardButtons[8] = (Button) findViewById(R.id.nine);
 
-        // setup the textviews
         mInfoTextView = (TextView) findViewById(R.id.information);
         mPlayerOneCount = (TextView) findViewById(R.id.humanCount);
         mTieCount = (TextView) findViewById(R.id.tiesCount);
@@ -66,16 +60,13 @@ public class MainActivity extends Activity {
         mPlayerOneText = (TextView) findViewById(R.id.human);
         mPlayerTwoText = (TextView) findViewById(R.id.android);
 
-        // set the initial counter display values
         mPlayerOneCount.setText(Integer.toString(mPlayerOneCounter));
         mTieCount.setText(Integer.toString(mTieCounter));
         mPlayerTwoCount.setText(Integer.toString(mPlayerTwoCounter));
 
-        // create a new game object
         mGame = new TicTacToeGame();
 
-        // start a new game
-        startNewGame(mIsSinglePlayer);
+        startNewGame(mGameType);
 
     }
 
@@ -104,9 +95,6 @@ public class MainActivity extends Activity {
         return true;
     }
 
-    // start a new game
-    // clears the board and resets all buttons / text
-    // sets game over to be false
     private void startNewGame(boolean isSingle)
     {
 
@@ -124,7 +112,7 @@ public class MainActivity extends Activity {
 
         if (mIsSinglePlayer)
         {
-            mPlayerOneText.setText("Human:");
+            mPlayerOneText.setText("Játékos:");
             mPlayerTwoText.setText("Android:");
 
             if (mPlayerOneFirst)
@@ -142,8 +130,8 @@ public class MainActivity extends Activity {
         }
         else
         {
-            mPlayerOneText.setText("Player One:");
-            mPlayerTwoText.setText("Player Two:");
+            mPlayerOneText.setText("Első Játékos:");
+            mPlayerTwoText.setText("Második Játékos:");
 
             if (mPlayerOneFirst)
             {
@@ -175,57 +163,104 @@ public class MainActivity extends Activity {
             {
                 if (mBoardButtons[location].isEnabled())
                 {
-                    setMove(mGame.PLAYER_ONE, location);
-
-                    int winner = mGame.checkForWinner();
-
-                    if (winner == 0)
+                    if (mIsSinglePlayer)
                     {
-                        mInfoTextView.setText(R.string.turn_computer);
-                        int move = mGame.getComputerMove();
-                        setMove(mGame.PLAYER_TWO, move);
-                        winner = mGame.checkForWinner();
-                    }
+                        setMove(mGame.PLAYER_ONE, location);
 
-                    if (winner == 0)
-                        mInfoTextView.setText(R.string.turn_human);
-                    else if (winner == 1)
-                    {
-                        mInfoTextView.setText(R.string.result_tie);
-                        mTieCounter++;
-                        mTieCount.setText(Integer.toString(mTieCounter));
-                        mGameOver = true;
-                    }
-                    else if (winner == 2)
-                    {
-                        mInfoTextView.setText(R.string.result_human_wins);
-                        mPlayerOneCounter++;
-                        mPlayerOneCount.setText(Integer.toString(mPlayerOneCounter));
-                        mGameOver = true;
+                        int winner = mGame.checkForWinner();
+
+                        if (winner == 0)
+                        {
+                            mInfoTextView.setText(R.string.turn_computer);
+                            int move = mGame.getComputerMove();
+                            setMove(mGame.PLAYER_TWO, move);
+                            winner = mGame.checkForWinner();
+                        }
+
+                        if (winner == 0)
+                            mInfoTextView.setText(R.string.turn_human);
+                        else if (winner == 1)
+                        {
+                            mInfoTextView.setText(R.string.result_tie);
+                            mTieCounter++;
+                            mTieCount.setText(Integer.toString(mTieCounter));
+                            mGameOver = true;
+                        }
+                        else if (winner == 2)
+                        {
+                            mInfoTextView.setText(R.string.result_human_wins);
+                            mPlayerOneCounter++;
+                            mPlayerOneCount.setText(Integer.toString(mPlayerOneCounter));
+                            mGameOver = true;
+                        }
+                        else
+                        {
+                            mInfoTextView.setText(R.string.result_computer_wins);
+                            mPlayerTwoCounter++;
+                            mPlayerTwoCount.setText(Integer.toString(mPlayerTwoCounter));
+                            mGameOver = true;
+                        }
                     }
                     else
                     {
-                        mInfoTextView.setText(R.string.result_computer_wins);
-                        mPlayerTwoCounter++;
-                        mPlayerTwoCount.setText(Integer.toString(mPlayerTwoCounter));
-                        mGameOver = true;
+                        if (mIsPlayerOneTurn)
+                            setMove(mGame.PLAYER_ONE, location);
+                        else
+                            setMove(mGame.PLAYER_TWO, location);
+
+                        int winner = mGame.checkForWinner();
+
+                        if (winner == 0)
+                        {
+                            if (mIsPlayerOneTurn)
+                            {
+                                mInfoTextView.setText(R.string.turn_player_two);
+                                mIsPlayerOneTurn = false;
+                            }
+                            else
+                            {
+                                mInfoTextView.setText(R.string.turn_player_one);
+                                mIsPlayerOneTurn = true;
+                            }
+                        }
+                        else if (winner == 1)
+                        {
+                            mInfoTextView.setText(R.string.result_tie);
+                            mTieCounter++;
+                            mTieCount.setText(Integer.toString(mTieCounter));
+                            mGameOver = true;
+                        }
+                        else if (winner == 2)
+                        {
+                            mInfoTextView.setText(R.string.result_player_one_wins);
+                            mPlayerOneCounter++;
+                            mPlayerOneCount.setText(Integer.toString(mPlayerOneCounter));
+                            mGameOver = true;
+                            mIsPlayerOneTurn = false;
+                        }
+                        else
+                        {
+                            mInfoTextView.setText(R.string.result_player_two_wins);
+                            mPlayerTwoCounter++;
+                            mPlayerTwoCount.setText(Integer.toString(mPlayerTwoCounter));
+                            mGameOver = true;
+                            mIsPlayerOneTurn = true;
+                        }
                     }
                 }
             }
         }
     }
 
-    // set move for the current player
     private void setMove(char player, int location)
     {
         mGame.setMove(player, location);
         mBoardButtons[location].setEnabled(false);
-        //mBoardButtons[location].setText(String.valueOf(player));
         if (player == mGame.PLAYER_ONE)
             mBoardButtons[location].setBackgroundDrawable(getResources().getDrawable(R.drawable.x_images));
             //mBoardButtons[location].setTextColor(Color.GREEN);
         else
             mBoardButtons[location].setBackgroundDrawable(getResources().getDrawable(R.drawable.o_images));
-        //mBoardButtons[location].setTextColor(Color.RED);
+            //mBoardButtons[location].setTextColor(Color.RED);
     }
 }

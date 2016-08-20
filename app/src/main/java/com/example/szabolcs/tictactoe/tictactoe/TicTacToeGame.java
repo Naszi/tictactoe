@@ -77,7 +77,7 @@ public class TicTacToeGame {
     }
 
     public int checkForWinner() {
-        for (int i = 0; i <= 6; i++) {
+        for (int i = 0; i <= 6; i +=3) {
             if (mBoard[i] == PLAYER_ONE &&
                     mBoard[i + 1] == PLAYER_ONE &&
                     mBoard[i + 2] == PLAYER_ONE)
