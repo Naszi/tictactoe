@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
-public class TicTacToeTutorialActivity extends Activity {
+public class MainActivity extends Activity {
 
     // Represents the internal state of the game
     private TicTacToeGame mGame;
@@ -75,7 +75,7 @@ public class TicTacToeTutorialActivity extends Activity {
         mGame = new TicTacToeGame();
 
         // start a new game
-        startNewGame();
+        startNewGame(mIsSinglePlayer);
 
     }
 
@@ -94,10 +94,10 @@ public class TicTacToeTutorialActivity extends Activity {
         switch(item.getItemId())
         {
             case R.id.newGame:
-                startNewGame();
+                startNewGame(mIsSinglePlayer);
                 break;
             case R.id.exitGame:
-                TicTacToeTutorialActivity.this.finish();
+                MainActivity.this.finish();
                 break;
         }
 
